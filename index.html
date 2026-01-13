@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compute Atlas</title>
+
+  <!-- Google AdSense (This I will replace when I get approved :D) 
+  <script> ... </script>
+  -->
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #0284c7;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 2rem;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .divider {
+      height: 18px;
+      width: 1px;
+      background: rgba(255,255,255,0.25);
+    }
+
+    .brand-link {
+      font-size: 0.8rem;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .brand-link:hover { color: var(--accent); }
+
+    button.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 0.45rem 0.9rem;
+      border-radius: 0.6rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .category {
+      background: var(--card);
+      padding: 1.6rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .category:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+
+    .category h2 { margin: 0 0 0.4rem; }
+    .category p { color: var(--muted); font-size: 0.9rem; }
+
+    .blog {
+      background: var(--card);
+      padding: 1.6rem;
+      border-radius: 1rem;
+      margin-bottom: 1.6rem;
+      cursor: pointer;
+    }
+
+    .meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .article {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 1rem;
+    }
+
+    .article p { line-height: 1.7; color: var(--muted); }
+
+    .ad {
+      background: linear-gradient(135deg, #1e293b, #020617);
+      border: 1px dashed rgba(255,255,255,0.25);
+      border-radius: 0.8rem;
+      padding: 1.2rem;
+      margin: 2rem 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.75rem;
+      padding: 2rem 1rem;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-title" onclick="goHome()">Compute Atlas</div>
+      <div class="divider"></div>
+      <div class="brand-link" onclick="openAbout()">About</div>
+      <div class="divider"></div>
+      <div class="brand-link" onclick="openPrivacy()">Privacy Policy</div>
+    </div>
+    <button class="secondary" onclick="toggleTheme()">Theme</button>
+  </header>
+
+  <main id="app"></main>
+
+  <footer>
+    © Compute Atlas
+  </footer>
+
+  <script>
+    const app = document.getElementById('app');
+    const theme = localStorage.getItem('theme') || 'dark';
+    document.body.dataset.theme = theme;
+
+    const blogs = [
+      {
+        id: 1,
+        title: 'Why ARM Is Taking Over Computing',
+        category: 'Hardware',
+        date: 'Jan 2026',
+        content: `ARM processors were once seen mainly in smartphones, but today they are reshaping the entire computing landscape.
+
+Their efficiency-first design allows laptops to deliver all-day battery life without sacrificing performance. Apple’s transition to Apple Silicon demonstrated that ARM can outperform traditional x86 chips in many real-world tasks.
+
+As operating systems and developer tools continue to mature, ARM-based systems are likely to become a long-term alternative to x86 across consumer and enterprise markets.`
+      }
+    ];
+
+    const categories = [
+      { name: 'Hardware', desc: 'CPUs, GPUs, chips, and architecture' },
+      { name: 'Software', desc: 'Operating systems and development' },
+      { name: 'AI', desc: 'Machine learning and future tech' },
+      { name: 'Networking', desc: 'Internet, security, and infrastructure' }
+    ];
+
+    function goHome() {
+      app.innerHTML = `
+        <section class="categories">
+          ${categories.map(c => `
+            <div class="category" onclick="openCategory('${c.name}')">
+              <h2>${c.name}</h2>
+              <p>${c.desc}</p>
+            </div>`).join('')}
+        </section>
+      `;
+    }
+
+    function openCategory(name) {
+      const filtered = blogs.filter(b => b.category === name);
+      app.innerHTML = `
+        <h2>${name}</h2>
+        ${filtered.map((b,i) => `
+          ${i === 1 ? '<div class="ad">Google AdSense Banner</div>' : ''}
+          <div class="blog" onclick="openBlog(${b.id})">
+            <h3>${b.title}</h3>
+            <div class="meta">${b.date}</div>
+          </div>`).join('') || '<p>No posts yet.</p>'}
+      `;
+    }
+
+    function openBlog(id) {
+      const b = blogs.find(x => x.id === id);
+      app.innerHTML = `
+        <article class="article">
+          <h2>${b.title}</h2>
+          <div class="meta">${b.category} • ${b.date}</div>
+          <p>${b.content.replace(/\n/g,'<br><br>')}</p>
+          <div class="ad">Google AdSense Banner</div>
+          <a href="#" onclick="openCategory('${b.category}')">← Back to ${b.category}</a>
+        </article>`;
+    }
+
+    function openPrivacy() {
+      app.innerHTML = `
+        <article class="article">
+          <h2>Privacy Policy</h2>
+          <p>At Compute Atlas, we respect your privacy.</p>
+          <p>We do not collect personal information such as names, email addresses, or phone numbers directly from visitors.</p>
+          <p>This website uses third-party services such as Google AdSense, which may use cookies, web beacons, or similar technologies to display advertisements relevant to users.</p>
+          <p>Google may use the DoubleClick cookie to serve ads based on a user’s visits to this and other websites.</p>
+          <p>Users may opt out of personalized advertising by visiting Google’s Ads Settings.</p>
+          <p>By using this website, you consent to the use of cookies and data collection by third-party vendors as described above.</p>
+        </article>`;
+    }
+
+    function openAbout() {
+      app.innerHTML = `
+        <article class="article">
+          <h2>About Compute Atlas</h2>
+          <p>Compute Atlas is a personal technology blog focused on computing systems, hardware, software, and emerging technologies.</p>
+          <p>This page can be edited later to describe your mission, background, and interests.</p>
+        </article>`;
+    }
+
+    function toggleTheme() {
+      const newTheme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.body.dataset.theme = newTheme;
+      localStorage.setItem('theme', newTheme);
+    }
+
+    goHome();
+  </script>
+</body>
+</html>
